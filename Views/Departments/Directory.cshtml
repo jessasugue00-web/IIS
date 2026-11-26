@@ -1,0 +1,71 @@
+@model IEnumerable<string>
+
+@{
+    var department = ViewData["Department"]?.ToString() ?? "Department";
+    var description = ViewData["Description"]?.ToString() ?? "";
+    var searchString = ViewData["SearchString"]?.ToString() ?? "";
+    ViewData["Title"] = department + " List";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title mb-1">@department List</h1>
+        <div class="text-muted">@description</div>
+        <small class="text-muted">Showing @Model.Count() name(s)</small>
+    </div>
+    <span class="badge rounded-pill text-bg-primary px-3 py-2">@department</span>
+</div>
+
+<div class="table-card p-3 p-md-4">
+    <form asp-controller="Departments" asp-action="@department" method="get" class="mb-3">
+        <div class="row g-2">
+            <div class="col-12 col-md-8 col-lg-6">
+                <input type="search" name="searchString" value="@searchString"
+                       class="form-control" placeholder="Search instructor name..." />
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
+            <div class="col-auto">
+                <a asp-controller="Departments" asp-action="@department"
+                   class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </div>
+    </form>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table instructor-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 90px;">No.</th>
+                        <th>Instructor Name</th>
+                        <th style="width: 140px;">Department</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var number = 1; }
+                    @foreach (var name in Model)
+                    {
+                        <tr>
+                            <td class="text-muted">@number</td>
+                            <td class="fw-semibold">@name</td>
+                            <td><span class="badge rounded-pill text-bg-light">@department</span></td>
+                        </tr>
+                        number++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center text-muted py-5">
+            <i class="bi bi-search fs-2 d-block mb-2"></i>
+            No names found. Try another search.
+        </div>
+    }
+</div>
